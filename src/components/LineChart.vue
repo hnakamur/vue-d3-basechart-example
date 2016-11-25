@@ -33,6 +33,9 @@ export default BaseChart.extend({
         .range([height, 0])
         .domain([0, d3.max(data, (d) => d.close)])
 
+      var xAxis = d3.axisBottom(x).ticks(5)
+      var yAxis = d3.axisLeft(y).ticks(5)
+
       var valueline = d3.line()
         .x((d) => x(parseTime(d.date)))
         .y((d) => y(d.close))
@@ -55,11 +58,13 @@ export default BaseChart.extend({
         .attr('d', valueline)
 
       g.append('g')
+        .attr('class', 'x-axis')
         .attr('transform', 'translate(0,' + height + ')')
-        .call(d3.axisBottom(x))
+        .call(xAxis)
 
       g.append('g')
-        .call(d3.axisLeft(y))
+        .attr('class', 'y-axis')
+        .call(yAxis)
     }
   },
   watch: {
