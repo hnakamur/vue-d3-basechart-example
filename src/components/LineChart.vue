@@ -57,6 +57,13 @@ export default BaseChart.extend({
         .attr('class', 'line')
         .attr('d', valueline)
 
+      g.selectAll('circle')
+        .data(data)
+        .enter().append('circle')
+        .attr('r', 3.5)
+        .attr('cx', (d) => x(parseTime(d.date)))
+        .attr('cy', (d) => y(d.close))
+
       g.append('g')
         .attr('class', 'x-axis')
         .attr('transform', 'translate(0,' + height + ')')
