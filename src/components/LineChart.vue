@@ -40,22 +40,25 @@ export default BaseChart.extend({
       var svg = d3.select(this.$el)
         .attr('width', this.width)
         .attr('height', this.height)
+
+      svg.selectAll('g').remove()
+
+      var g = svg
         .append('g')
         .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
 
-      var d = svg.selectAll('path')
+      var d = g.selectAll('path')
         .data([data])
 
       d.enter().append('path')
-        .merge(d)
         .attr('class', 'line')
         .attr('d', valueline)
 
-      svg.append('g')
+      g.append('g')
         .attr('transform', 'translate(0,' + height + ')')
         .call(d3.axisBottom(x))
 
-      svg.append('g')
+      g.append('g')
         .call(d3.axisLeft(y))
     }
   },
