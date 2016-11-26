@@ -57,12 +57,29 @@ export default BaseChart.extend({
         .attr('class', 'line')
         .attr('d', valueline)
 
+      var tooltip = d3.select('body').append('div')
+        .attr('class', 'tooltip')
+        .style('opacitiy', 0)
+
       g.selectAll('circle')
         .data(data)
         .enter().append('circle')
         .attr('r', 3.5)
         .attr('cx', (d) => x(parseTime(d.date)))
         .attr('cy', (d) => y(d.close))
+        .on('mouseover', (d) => {
+          tooltip.transition()
+            .duration(200)
+            .style('opacity', 0.9)
+          tooltip.html(d.date + '<br/>' + d.close)
+            .style('left', d3.event.pageX + 'px')
+            .style('top', (d3.event.pageY - 34) + 'px')
+        })
+        .on('mouseout', (d) => {
+          tooltip.transition()
+            .duration(200)
+            .style('opacity', 0)
+        })
 
       g.append('g')
         .attr('class', 'x-axis')
@@ -88,5 +105,18 @@ export default BaseChart.extend({
     stroke: steelblue;
     stroke-width: 2px;
   }
+}
+
+.tooltip {
+  position: absolute;
+  text-align: center;
+  width: 80px;
+  height: 34px;
+  padding: 2px;
+  font: 12px sans-serif;
+  background: lightsteelblue;
+  border: 0;
+  border-radius: 8px;
+  pointer-events: none;
 }
 </style>
