@@ -1,19 +1,22 @@
 <template>
   <div id="app">
     <bar-chart :chart-data="barChart.data" :width="barChart.width" :bar-height="barChart.barHeight"></bar-chart>
-    <line-chart :chart-data="lineChart.data" :width="lineChart.width" :height="lineChart.height"></line-chart>
+    <!-- <line-chart :chart-data="lineChart.data" :width="lineChart.width" :height="lineChart.height"></line-chart> -->
+    <sankey-chart :chart-data="sankeyChart.data" :width="sankeyChart.width" :height="sankeyChart.height"></sankey-chart>
   </div>
 </template>
 
 <script>
 import BarChart from './components/BarChart'
 import LineChart from './components/LineChart'
+import SankeyChart from './components/SankeyChart'
 
 export default {
   name: 'app',
   components: {
     BarChart,
-    LineChart
+    LineChart,
+    SankeyChart
   },
   data () {
     return {
@@ -51,6 +54,28 @@ export default {
           { date: '27-Mar-12', close: 614.48 },
           { date: '26-Mar-12', close: 606.98 }
         ],
+        width: 800,
+        height: 600
+      },
+      sankeyChart: {
+        data: {
+          'nodes': [
+            {'node': 0, 'name': 'node0'},
+            {'node': 1, 'name': 'node1'},
+            {'node': 2, 'name': 'node2'},
+            {'node': 3, 'name': 'node3'},
+            {'node': 4, 'name': 'node4'}
+          ],
+          'links': [
+            {'source': 0, 'target': 2, 'value': 2},
+            {'source': 1, 'target': 2, 'value': 2},
+            {'source': 1, 'target': 3, 'value': 2},
+            {'source': 0, 'target': 4, 'value': 2},
+            {'source': 2, 'target': 3, 'value': 2},
+            {'source': 2, 'target': 4, 'value': 2},
+            {'source': 3, 'target': 4, 'value': 4}
+          ]
+        },
         width: 800,
         height: 600
       }
