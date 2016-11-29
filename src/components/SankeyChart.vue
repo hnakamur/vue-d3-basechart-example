@@ -5,9 +5,11 @@
 <script>
 import BaseChart from 'vue-d3-basechart'
 import * as d3 from 'd3'
+// import {drag} from 'd3-drag'
+import {sankey} from 'd3-sankey'
 
 export default BaseChart.extend({
-  name: 'line-chart',
+  name: 'sankey-chart',
   props: ['width', 'height'],
   methods: {
     renderChart () {
@@ -22,7 +24,7 @@ export default BaseChart.extend({
       var color = d3.schemeCategory20
 
       // append the svg canvas to the page
-      var svg = d3.select('#chart').append('svg')
+      var svg = d3.select(this.$el)
           .attr('width', width + margin.left + margin.right)
           .attr('height', height + margin.top + margin.bottom)
         .append('g')
@@ -30,21 +32,20 @@ export default BaseChart.extend({
                 'translate(' + margin.left + ',' + margin.top + ')')
 
       // Set the sankey diagram properties
-      var sankey = d3.sankey()
+      var s = sankey()
           .nodeWidth(36)
           .nodePadding(40)
           .size([width, height])
 
-      var path = sankey.link()
+      var path = s.link()
 
       // load the data
-      d3.json('sankey-formatted.json', function (error, graph) {
+      d3.json('static/sankey-formatted.json', function (error, graph) {
         if (error !== null) {
           return error
         }
 
-        sankey
-            .nodes(graph.nodes)
+        s.nodes(graph.nodes)
             .links(graph.links)
             .layout(32)
 
@@ -68,17 +69,17 @@ export default BaseChart.extend({
           .enter().append('g')
             .attr('class', 'node')
             .attr('transform', (d) => 'translate(' + d.x + ',' + d.y + ')')
-          .call(d3.behavior.drag()
-            .origin((d) => d)
-            .on('dragstart', function () {
-              this.parentNode.appendChild(this)
-            })
-            .on('drag', dragmove))
+          // .call(drag()
+          //   .origin((d) => d)
+          //   .on('dragstart', function () {
+          //     this.parentNode.appendChild(this)
+          //   })
+          //   .on('drag', dragmove))
 
         // add the rectangles for the nodes
         node.append('rect')
             .attr('height', (d) => d.dy)
-            .attr('width', sankey.nodeWidth())
+            .attr('width', s.nodeWidth())
             .style('fill', function (d) {
               d.color = color(d.name.replace(/ .*/, ''))
             })
@@ -95,20 +96,20 @@ export default BaseChart.extend({
             .attr('transform', null)
             .text((d) => d.name)
           .filter((d) => (d.x < width / 2))
-            .attr('x', 6 + sankey.nodeWidth())
+            .attr('x', 6 + s.nodeWidth())
             .attr('text-anchor', 'start')
 
-        // the function for moving the nodes
-        function dragmove (d) {
-          d3.select(this).attr('transform',
-              'translate(' + (
-                  d.x = Math.max(0, Math.min(width - d.dx, d3.event.x))
-              ) + ',' + (
-                  d.y = Math.max(0, Math.min(height - d.dy, d3.event.y))
-              ) + ')')
-          sankey.relayout()
-          link.attr('d', path)
-        }
+        // // the function for moving the nodes
+        // function dragmove (d) {
+        //   d3.select(this).attr('transform',
+        //       'translate(' + (
+        //           d.x = Math.max(0, Math.min(width - d.dx, d3.event.x))
+        //       ) + ',' + (
+        //           d.y = Math.max(0, Math.min(height - d.dy, d3.event.y))
+        //       ) + ')')
+        //   s.relayout()
+        //   link.attr('d', path)
+        // }
       })
     }
   },

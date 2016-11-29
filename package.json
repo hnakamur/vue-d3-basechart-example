@@ -10,6 +10,8 @@
     "lint": "eslint --ext .js,.vue src"
   },
   "dependencies": {
+    "d3-drag": "^1.0.2",
+    "d3-sankey": "^0.4.1",
     "vue": "^2.0.1",
     "vue-d3-basechart": "^0.2.0"
   },

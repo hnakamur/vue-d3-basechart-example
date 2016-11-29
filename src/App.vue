@@ -1,8 +1,8 @@
 <template>
   <div id="app">
-    <bar-chart :chart-data="barChart.data" :width="barChart.width" :bar-height="barChart.barHeight"></bar-chart>
+    <div><bar-chart :chart-data="barChart.data" :width="barChart.width" :bar-height="barChart.barHeight"></bar-chart></div>
     <!-- <line-chart :chart-data="lineChart.data" :width="lineChart.width" :height="lineChart.height"></line-chart> -->
-    <sankey-chart :chart-data="sankeyChart.data" :width="sankeyChart.width" :height="sankeyChart.height"></sankey-chart>
+    <div><sankey-chart :chart-data="sankeyChart.data" :width="sankeyChart.width" :height="sankeyChart.height"></sankey-chart></div>
   </div>
 </template>
 
@@ -76,8 +76,8 @@ export default {
             {'source': 3, 'target': 4, 'value': 4}
           ]
         },
-        width: 800,
-        height: 600
+        width: 1400,
+        height: 800
       }
     }
   }
