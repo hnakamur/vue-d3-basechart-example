@@ -33,6 +33,9 @@ export default BaseChart.extend({
         .range([height, 0])
         .domain([0, d3.max(data, (d) => d.close)])
 
+      var xAxis = d3.axisBottom(x).ticks(5)
+      var yAxis = d3.axisLeft(y).ticks(5)
+
       var valueline = d3.line()
         .x((d) => x(parseTime(d.date)))
         .y((d) => y(d.close))
@@ -40,23 +43,52 @@ export default BaseChart.extend({
       var svg = d3.select(this.$el)
         .attr('width', this.width)
         .attr('height', this.height)
+
+      svg.selectAll('g').remove()
+
+      var g = svg
         .append('g')
         .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
 
-      var d = svg.selectAll('path')
+      var d = g.selectAll('path')
         .data([data])
 
       d.enter().append('path')
-        .merge(d)
         .attr('class', 'line')
         .attr('d', valueline)
 
-      svg.append('g')
-        .attr('transform', 'translate(0,' + height + ')')
-        .call(d3.axisBottom(x))
+      var tooltip = d3.select('body').append('div')
+        .attr('class', 'tooltip')
+        .style('opacitiy', 0)
 
-      svg.append('g')
-        .call(d3.axisLeft(y))
+      g.selectAll('circle')
+        .data(data)
+        .enter().append('circle')
+        .attr('r', 3.5)
+        .attr('cx', (d) => x(parseTime(d.date)))
+        .attr('cy', (d) => y(d.close))
+        .on('mouseover', (d) => {
+          tooltip.transition()
+            .duration(200)
+            .style('opacity', 0.9)
+          tooltip.html(d.date + '<br/>' + d.close)
+            .style('left', d3.event.pageX + 'px')
+            .style('top', (d3.event.pageY - 34) + 'px')
+        })
+        .on('mouseout', (d) => {
+          tooltip.transition()
+            .duration(200)
+            .style('opacity', 0)
+        })
+
+      g.append('g')
+        .attr('class', 'x-axis')
+        .attr('transform', 'translate(0,' + height + ')')
+        .call(xAxis)
+
+      g.append('g')
+        .attr('class', 'y-axis')
+        .call(yAxis)
     }
   },
   watch: {
@@ -73,5 +105,18 @@ export default BaseChart.extend({
     stroke: steelblue;
     stroke-width: 2px;
   }
+}
+
+.tooltip {
+  position: absolute;
+  text-align: center;
+  width: 80px;
+  height: 34px;
+  padding: 2px;
+  font: 12px sans-serif;
+  background: lightsteelblue;
+  border: 0;
+  border-radius: 8px;
+  pointer-events: none;
 }
 </style>
